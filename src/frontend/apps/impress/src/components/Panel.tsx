@@ -5,7 +5,7 @@ import { Box, Card, IconBG, Text } from '@/components';
 import { useCunninghamTheme } from '@/cunningham';
 
 interface PanelProps {
-  title: string;
+  title?: string;
   setIsPanelOpen: (isOpen: boolean) => void;
 }
 
@@ -90,9 +90,11 @@ export const Panel = ({
             }}
             $radius="2px"
           />
-          <Text $weight="bold" $size="l" $theme="primary">
-            {title}
-          </Text>
+          {title && (
+            <Text $weight="bold" $size="l" $theme="primary">
+              {title}
+            </Text>
+          )}
         </Box>
         {children}
       </Box>
