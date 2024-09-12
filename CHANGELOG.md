@@ -25,6 +25,7 @@ and this project adheres to
 
 - 🐛 Fix forcing ID when creating a document via API endpoint #234
 - 🐛 Rebuild frontend dev container from makefile #248
+- 🐛 (backend) gitlab oicd userinfo endpoint #232
 
 
 ## [1.3.0] - 2024-09-05

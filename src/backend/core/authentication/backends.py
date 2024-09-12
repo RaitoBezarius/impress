@@ -18,6 +18,11 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
     in the User and Identity models, and handles signed and/or encrypted UserInfo response.
     """
 
+    def is_jwt(self, token):
+        """Check if the token is a JWT token."""
+        parts = token.split(".")
+        return len(parts) == 3
+
     def get_userinfo(self, access_token, id_token, payload):
         """Return user details dictionary.
 
@@ -45,7 +50,16 @@ class OIDCAuthenticationBackend(MozillaOIDCAuthenticationBackend):
             proxies=self.get_settings("OIDC_PROXY", None),
         )
         user_response.raise_for_status()
-        userinfo = self.verify_token(user_response.text)
+
+        try:
+            userinfo = (
+                self.verify_token(user_response.text)
+                if self.is_jwt(user_response.text)
+                else user_response.json()
+            )
+        except ValueError as e:
+            raise SuspiciousOperation(_("Invalid response format")) from e
+
         return userinfo
 
     def get_or_create_user(self, access_token, id_token, payload):
